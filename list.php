@@ -106,7 +106,9 @@
 		});
 
 		loadData();
-		
+		function resetform(){
+			document.getElementById("search").value="";			
+		}
 
 
 	</script>
