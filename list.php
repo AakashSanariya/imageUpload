@@ -43,6 +43,19 @@
 		<div id="table">
 			
 		</div>
+		
+		<!-- For pagination getting pageNumber-->
+		<?php
+			if (isset($_GET['pageNumber'])) {
+				$pageNumber = $_GET['pageNumber'];
+				echo "<input type='hidden' id='pageNumber' value='$pageNumber'>";
+			}
+			else{
+				$pageNumber = "1";
+				echo "<input type='hidden' id='pageNumber' value='$pageNumber'>";
+			}
+		?>
+		<!-- //For pagination getting pageNumber-->
 	</div>
 
 	<!-- Delete Image Ajax -->
@@ -72,10 +85,11 @@
 
 		function loadData(){
 			var action = "fetch";
+			var pageNumber = document.getElementById("pageNumber").value;
 			$.ajax({
 				url: 'ajaxdataload.php',
 				type: 'POST',
-				data: { action: action},
+				data: { action: action, pageNumber: pageNumber},
 				success: function(data){
 					$('#table').html(data);
 				}

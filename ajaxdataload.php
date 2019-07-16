@@ -1,6 +1,6 @@
 <?php
 if($_POST['action'] == "fetch"){
-?>
+	?>
 	<table class="table table-dark table-striped" id="Image-preview">
 		<thead>
 			<tr>
@@ -13,7 +13,28 @@ if($_POST['action'] == "fetch"){
 		<tbody>
 			<?php
 			include_once('database.php');
-			$sql = "SELECT * FROM image";
+
+			/* For Pagination Display Record per page*/
+			$limitRecord = 2;
+
+			if(isset($_POST['pageNumber'])){
+				$pageNumber = $_POST['pageNumber'];
+			}
+			else{
+				$pageNumber = "1";
+			}
+			$startFrom = ($pageNumber -1) * $limitRecord;
+
+
+			/*page Moveing */
+			$countRecord = "SELECT COUNT(*) as record FROM image";
+			$resultCount = mysqli_query($con,$countRecord);
+			$rowCount = mysqli_fetch_assoc($resultCount);
+			$totalRecord = $rowCount['record'];
+			$totalPage = ceil($totalRecord / $limitRecord);
+
+
+			$sql = "SELECT * FROM image LIMIT $startFrom, $limitRecord";
 			$result = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($result)) {
 				?>
@@ -26,6 +47,16 @@ if($_POST['action'] == "fetch"){
 				<?php
 			}
 		}
-			?>
-		</tbody>
-	</table>
+		?>
+	</tbody>
+</table>
+<ul class="pagination">
+	<li class="page-item"><a class="page-link" href="?pageNumber=1">First</a></li>
+	<li class="page-item <?php if($pageNumber <= 1){ echo 'disabled'; } ?>">
+        <a class="page-link" href="<?php if($pageNumber <= 1){ echo ''; } else { echo "?pageNumber=".($pageNumber - 1); } ?>">Prev</a>
+    </li>
+	<li class="page-item <?php if($pageNumber >= $totalPage){ echo 'disabled'; } ?>">
+		<a class="page-link" href="<?php if($pageNumber >= $totalPage){ echo (''); } else { echo "?pageNumber=".($pageNumber + 1); } ?>">Next</a>
+	</li>
+	<li class="page-item"><a class="page-link" href="?pageNumber=<?php echo($totalPage); ?>">Last</a></li>
+</ul>
