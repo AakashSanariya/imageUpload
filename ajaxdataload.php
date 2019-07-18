@@ -13,9 +13,8 @@ if($_POST['action'] == "fetch"){
 		<tbody>
 			<?php
 			include_once('database.php');
-
 			/* For Pagination Display Record per page*/
-			$limitRecord = 2;
+			$limitRecord = 3;
 
 			if(isset($_POST['pageNumber'])){
 				$pageNumber = $_POST['pageNumber'];
@@ -33,8 +32,14 @@ if($_POST['action'] == "fetch"){
 			$totalRecord = $rowCount['record'];
 			$totalPage = ceil($totalRecord / $limitRecord);
 
+			/* For Sorting Add*/
+			if($_POST['sorting'] == "a-z"){
+				$sql = "SELECT * FROM image ORDER BY name ASC LIMIT $startFrom, $limitRecord";
+			}
+			else{
+				$sql = "SELECT * FROM image ORDER BY name DESC LIMIT $startFrom, $limitRecord";
+			}
 
-			$sql = "SELECT * FROM image LIMIT $startFrom, $limitRecord";
 			$result = mysqli_query($con, $sql);
 			while ($row = mysqli_fetch_assoc($result)) {
 				?>

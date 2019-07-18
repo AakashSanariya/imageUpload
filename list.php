@@ -20,13 +20,22 @@
 	<!-- Search autocomplete JS -->
 	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
  	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
- 	 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 	<!-- // Search autocomplete JS -->
+
+	<!--Font awosome for Icon 	-->
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+	<!-- // Font awosome for Icon 	-->
 
 	<!-- Notify Js -->
 	<script type="text/javascript" src="js/notify.min.js"></script>
 	<script type="text/javascript" src="js/notify.js"></script>
 	<!-- // Notify Js -->
+	<style>
+		.searchBack{
+			background: lightgray;
+		}
+	</style>
 
 </head>
 <body>
@@ -39,6 +48,12 @@
 				<button class="btn btn-success" type="submit" onclick="search()">Search</button> 
 			</div>
 			<button class="btn btn-secondary" onclick="resetform()">Reset</button>
+		</div>
+		<div class="form-group float-right mt-3">
+			<select id="sorting" class="form-control col-md-12" onchange="loadData();">
+				<option value="a-z" selected>A to Z</option>
+				<option value="z-a">Z to A</option>
+			</select>
 		</div>
 		<div id="table">
 			
@@ -83,13 +98,15 @@
 			}
 		}
 
+		/*Data Load*/
 		function loadData(){
 			var action = "fetch";
+			var sort = document.getElementById("sorting").value;
 			var pageNumber = document.getElementById("pageNumber").value;
 			$.ajax({
 				url: 'ajaxdataload.php',
 				type: 'POST',
-				data: { action: action, pageNumber: pageNumber},
+				data: { action: action, pageNumber: pageNumber, sorting: sort},
 				success: function(data){
 					$('#table').html(data);
 				}
@@ -111,12 +128,17 @@
 			});
 		}		
 
-		/* For auto load searching Complete*/
+		/* For auto load searching Complete only dispaly at search input*/
 		$(function(){
 			$("#search").autocomplete({
-				source: 'searchauto.php',
-
+				autoFocus: true,
+				position : {my: "right top", at: "right bottom"},
+				classes : {
+					"ui-autocomplete" : "searchBack"
+				},
+				source: 'searchauto.php'
 			})
+
 		});
 
 		loadData();
